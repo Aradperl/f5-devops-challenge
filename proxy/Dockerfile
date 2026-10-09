@@ -1,14 +1,12 @@
 # Proxy image inherited from the previous team.
 
-FROM ubuntu:24.04
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update && \
-    apt-get install -y nginx && \
-    rm -rf /var/lib/apt/lists/*
+FROM nginx:1.27-alpine-slim
 
 COPY nginx.conf /etc/nginx/nginx.conf
+
+RUN chown -R nginx:nginx /var/cache/nginx /var/log/nginx
+
+USER nginx
 
 EXPOSE 80
 
