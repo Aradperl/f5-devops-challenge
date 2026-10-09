@@ -2,10 +2,13 @@
 
 FROM ubuntu:24.04
 
-COPY nginx.conf /etc/nginx/nginx.conf
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
-    apt-get install -y nginx curl htop vim git
+    apt-get install -y nginx && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
 
