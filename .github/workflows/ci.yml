@@ -16,7 +16,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Verify script execution bit
+        run: test -x ./scripts/run-tests.sh
+
       - name: Execute test suite
-        run: |
-          chmod +x ./scripts/run-tests.sh
-          ./scripts/run-tests.sh
+        run: ./scripts/run-tests.sh
