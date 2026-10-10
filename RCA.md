@@ -7,7 +7,6 @@ Fill this in as you go. Bullet points are fine — be specific, not long.
 ## Defect 1: Proxy image fails to build
 
 ### Symptom / error output
-* Docker build hangs or fails during package installation.
 * `dpkg` prompts interactively asking which copy of `/etc/nginx/nginx.conf` to keep.
 
 ### How I diagnosed it
@@ -86,9 +85,8 @@ Optional. Answer only the ones you got to — number them, skip the rest.
 
 > 1. **Proxy Image Size Reduction:**
 >    * Replaced `ubuntu:24.04` with `nginx:1.27-alpine-slim`.
->    * Measured image size before: **150MB** (31.5MB compressed).
->    * Measured image size after: **20.2MB** (5.8MB compressed).
->    * Footprint reduction of ~86%.
+>    * `docker images` SIZE for the Ubuntu proxy, built from the Dockerfile before that change: `proxy-ubuntu-before 150MB`. `docker image inspect` reported `Size=150295863`.
+>    * `docker images` SIZE for the image the suite uses now: `f5-devops-challenge-proxy 20.2MB`. `docker image inspect` reported `Size=20171171`.
 >
 > 2. **Running as Non-Root User:**
 >    * `USER nginx` in `proxy/Dockerfile`. Nginx still `listen`s on 80.
