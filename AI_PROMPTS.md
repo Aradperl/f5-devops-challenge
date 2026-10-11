@@ -29,7 +29,7 @@ Describe **one concrete case** where the AI's answer was wrong, outdated, or
 sub-optimal. Cover: what it suggested, how you noticed it was wrong, and what
 you did instead. 3–5 sentences.
 
-> For the startup race, the suggestion was to set CONFIG_FETCH_SECONDS=0. That skips the delay in backend/app.py instead of waiting for port 8080, and depends_on would still only wait for the process to start. app.py sleeps 2 seconds for each of 4 keys, about 8 seconds. What I kept is a backend healthcheck using Python urllib, with start_period set to 30s, and the proxy waiting on service_healthy. The default delay stays, and the first successful /health check ends the wait.
+> For the startup race, the suggestion was to set CONFIG_FETCH_SECONDS=0. I committed that in 13fc704. It skips the delay in backend/app.py instead of waiting for port 8080, and depends_on would still only wait for the process to start. app.py sleeps 2 seconds for each of 4 keys, about 8 seconds. I replaced it in bf9e2c7 with a backend healthcheck using Python urllib, start_period set to 30s, and the proxy waiting on service_healthy. The default delay stays, and the first successful /health check ends the wait.
 
 ---
 

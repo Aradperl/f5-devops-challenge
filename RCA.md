@@ -8,6 +8,8 @@ Fill this in as you go. Bullet points are fine — be specific, not long.
 
 ### Symptom / error output
 * `dpkg` prompts interactively asking which copy of `/etc/nginx/nginx.conf` to keep.
+* The build log ends with `end of file on stdin at conffile prompt`.
+* `DEBIAN_FRONTEND=noninteractive` does not answer a dpkg conffile prompt, so that setting alone does not fix the build.
 
 ### How I diagnosed it
 * Executed `./scripts/run-tests.sh` and inspected Docker build logs.
@@ -85,12 +87,12 @@ Optional. Answer only the ones you got to — number them, skip the rest.
 
 > 1. **Proxy Image Size Reduction:**
 >    * Replaced `ubuntu:24.04` with `nginx:1.27-alpine-slim`.
->    * `docker images` SIZE for the Ubuntu proxy, built from the Dockerfile before that change: `proxy-ubuntu-before 150MB`. `docker image inspect` reported `Size=150295863`.
+>    * `docker images` SIZE for the Ubuntu proxy, built from the Dockerfile before that change: `proxy-ubuntu-before 150MB`. `docker image inspect` reported `Size=150295863`. That image was Ubuntu with only `nginx` installed. `curl`, `htop`, `vim`, and `git` were already removed from that Dockerfile.
 >    * `docker images` SIZE for the image the suite uses now: `f5-devops-challenge-proxy 20.2MB`. `docker image inspect` reported `Size=20171171`.
 >
 > 2. **Running as Non-Root User:**
 >    * `USER nginx` in `proxy/Dockerfile`. Nginx still `listen`s on 80.
->    * `cap_add: NET_BIND_SERVICE` on the proxy in `docker-compose.yml`, so that user can bind port 80.
+>    * `cap_add: NET_BIND_SERVICE` is listed on the proxy in `docker-compose.yml`. That capability is already in Docker's default set, so the line does not grant a new one.
 >    * Host publish is `8081:80`. Tests still use `PROXY_URL=http://proxy:80` inside the Compose network.
 >    * `pid /tmp/nginx.pid;` so the nginx user can write the pid file.
 >    * `chown -R nginx:nginx /var/cache/nginx /var/log/nginx` before the `USER` line.
